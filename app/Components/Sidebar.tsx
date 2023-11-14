@@ -6,6 +6,8 @@ import { useGlobalState } from "../Context/globalProvider";
 import Image from "next/image";
 import menu from "../utils/menu";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import { useRouter as rout } from "next/router";
 
 const SidebarStyled = styled.nav`
   position: relative;
@@ -17,7 +19,12 @@ const SidebarStyled = styled.nav`
 
 function Sidebar() {
   const { theme } = useGlobalState();
-  console.log(theme);
+  const router = useRouter();
+  const pathname = usePathname;
+
+  const handleNavigation = (link: string) => {
+    router.push(link);
+  };
 
   return (
     <SidebarStyled theme={theme}>
@@ -41,7 +48,15 @@ function Sidebar() {
 
           <ul className="nav-items">
             {menu.map((item) => (
-              <li key={item.id}>
+              <li
+                key={item.id}
+                className={`nav-item ${
+                  rout.pathname === item.link ? "active" : ""
+                }`}
+                onClick={() => {
+                  handleNavigation(item.link);
+                }}
+              >
                 {item.icon}
                 <Link href={item.link}>{item.title}</Link>
               </li>
